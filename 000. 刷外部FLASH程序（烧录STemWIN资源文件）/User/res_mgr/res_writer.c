@@ -23,7 +23,6 @@ static char full_file_name[512];
 static char line_temp[512];
 
 
-
 /**
   * @brief  检查是否要忽略文件夹或文件
   * @param  check_name[in] 要检查的文件名,全路径
@@ -38,6 +37,7 @@ uint8_t Is_Ignore(char *check_name, char *ignore_file)
   char *ignore_file_dir;
   char *dir_ptr ;
   char *full_path;
+  char *ignore_temp;
   
   result = f_open(&file_temp, ignore_file, FA_OPEN_EXISTING | FA_READ);
   
@@ -69,16 +69,17 @@ uint8_t Is_Ignore(char *check_name, char *ignore_file)
     /* 注释行，跳过*/
     if(line_temp[0] == '#')
       continue;
-    
-    /* 替换掉回车 */
-    line_temp[strlen(line_temp)-1] = '\0';
+
+    /* 去掉结尾的回车换行符 */
+    ignore_temp = strtok(line_temp, "\r\n");
     
     /* 拼接出完整的忽略文件路径 */
-    sprintf(full_path, "%s/%s",ignore_file_dir,line_temp);
-  
+    sprintf(full_path, "%s/%s", ignore_file_dir, ignore_temp);
+    
 //    BURN_DEBUG("full_path=%s,\r\ncheck_name=%s\r\n",
 //                full_path,
 //                check_name);
+    
     /* 比较是否一致 */
     if(strcasecmp(check_name,full_path) == 0)
     {      
