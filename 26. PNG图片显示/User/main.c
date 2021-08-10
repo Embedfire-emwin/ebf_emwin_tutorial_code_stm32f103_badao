@@ -259,6 +259,9 @@ static void BSP_Init(void)
   /* 触摸屏初始化 */
 	XPT2046_Init();
 	
+  /* 提前初始化LCD驱动，在GUI_Init调用LCD_X_Config之前确认LCD驱动芯片ID: lcdid */
+  ILI9341_Init();
+  
   /* 挂载文件系统，挂载时会对SD卡初始化 */
 	/* 禁用WIFI */
 	ESP_PDN_INIT();
